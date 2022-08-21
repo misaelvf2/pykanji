@@ -6,5 +6,6 @@
     "python.linting.enabled": true,
     "python.analysis.extraPaths": [
         "./pykanji"
-    ]
+    ],
+    "sqlite.logLevel": "DEBUG"
 }
