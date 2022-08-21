@@ -1,10 +1,38 @@
+from collections import namedtuple
+
+
 class Kanji:
     def __init__(self, literal="", meanings=[], onyomi=[], kunyomi=[], misc={}):
-        self.literal = literal
-        self.meanings = meanings
-        self.onyomi = onyomi
-        self.kunyomi = kunyomi
-        self.misc = misc
+        self._literal = literal
+        self._meanings = meanings
+        self._onyomi = onyomi
+        self._kunyomi = kunyomi
+        self._misc = misc
+
+    @property
+    def literal(self):
+        return self._literal
+
+    @property
+    def meanings(self):
+        return self._meanings
+
+    @property
+    def readings(self):
+        Readings = namedtuple("Readings", ["onyomi", "kunyomi"])
+        return Readings(self.onyomi, self.kunyomi)
+
+    @property
+    def onyomi(self):
+        return self._onyomi
+
+    @property
+    def kunyomi(self):
+        return self._kunyomi
+
+    @property
+    def misc(self):
+        return self._misc
 
     def __str__(self):
         return (
