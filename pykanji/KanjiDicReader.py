@@ -57,10 +57,10 @@ class KanjiDicReader:
     def find_misc(self, character):
         misc_elem = character.misc
         misc = {
-            "grade": misc_elem.grade.string if misc_elem.grade else None,
-            "stroke_count": misc_elem.stroke_count.string,
-            "frequency": misc_elem.freq.string if misc_elem.freq else None,
-            "jlpt": misc_elem.jlpt.string if misc_elem.jlpt else None,
+            "grade": int(misc_elem.grade.string) if misc_elem.grade else 0,
+            "stroke_count": int(misc_elem.stroke_count.string),
+            "frequency": int(misc_elem.freq.string) if misc_elem.freq else 0,
+            "jlpt": int(misc_elem.jlpt.string) if misc_elem.jlpt else 0,
         }
         return misc
 
