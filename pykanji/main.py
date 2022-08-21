@@ -6,6 +6,9 @@ class KanjiDicReader:
         self.soup = soup
         self.characters = self._find_characters(limit=limit)
 
+    def _get(self, parent, element, default=None):
+        return parent.element if parent else default
+
     def _find_characters(self, limit):
         first_character = self._find_first_character()
         characters = [first_character]
@@ -27,13 +30,42 @@ class KanjiDicReader:
     def find_literal(self, character):
         return character.literal.string
 
+    def find_meanings(self, character):
+        if not character.reading_meaning:
+            return []
+        meanings = character.reading_meaning.rmgroup
+        return list(
+            map(
+                lambda x: x.string,
+                meanings.find_all("meaning", m_lang=False, recursive=False),
+            )
+        )
+
     def find_onyomi(self, character):
+        if not character.reading_meaning:
+            return []
         readings = character.reading_meaning.rmgroup
-        return list(map(lambda x: x.string, readings.find_all(r_type="ja_on")))
+        return list(
+            map(lambda x: x.string, readings.find_all(r_type="ja_on", recursive=False))
+        )
 
     def find_kunyomi(self, character):
+        if not character.reading_meaning:
+            return []
         readings = character.reading_meaning.rmgroup
-        return list(map(lambda x: x.string, readings.find_all(r_type="ja_kun")))
+        return list(
+            map(lambda x: x.string, readings.find_all(r_type="ja_kun", recursive=False))
+        )
+
+    def find_misc(self, character):
+        misc_elem = character.misc
+        misc = {
+            "grade": misc_elem.grade.string if misc_elem.grade else None,
+            "stroke_count": misc_elem.stroke_count.string,
+            "frequency": misc_elem.freq.string if misc_elem.freq else None,
+            "jlpt": misc_elem.jlpt.string if misc_elem.jlpt else None,
+        }
+        return misc
 
     def make_all_kanji(self):
         kanji = []
@@ -42,27 +74,34 @@ class KanjiDicReader:
         return kanji
 
     def make_kanji(self, character):
-        return Kanji(
-            literal=self.find_literal(character),
-            onyomi=self.find_onyomi(character),
-            kunyomi=self.find_kunyomi(character),
-        )
+        try:
+            return Kanji(
+                literal=self.find_literal(character),
+                meanings=self.find_meanings(character),
+                onyomi=self.find_onyomi(character),
+                kunyomi=self.find_kunyomi(character),
+                misc=self.find_misc(character),
+            )
+        except AttributeError:
+            print(f"Failed on {character.literal.string}")
 
 
 class Kanji:
-    def __init__(self, literal="", onyomi=[], kunyomi=[]):
+    def __init__(self, literal="", meanings=[], onyomi=[], kunyomi=[], misc={}):
         self.literal = literal
+        self.meanings = meanings
         self.onyomi = onyomi
         self.kunyomi = kunyomi
+        self.misc = misc
 
     def __str__(self):
-        return f"<{self.literal}>\n onyomi={self.onyomi}\n kunyomi={self.kunyomi}"
+        return f"<{self.literal}>\n meanings={self.meanings}\n onyomi={self.onyomi}\n kunyomi={self.kunyomi}\n misc={self.misc}"
 
 
 with open("kanjidic2.xml") as fp:
     soup = BeautifulSoup(fp, "xml")
 
-    my_reader = KanjiDicReader(soup=soup, limit=5)
+    my_reader = KanjiDicReader(soup=soup, limit=None)
 
     my_kanji = my_reader.make_all_kanji()
 
