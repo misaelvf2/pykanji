@@ -1,0 +1,86 @@
+<!-- Entry for Kanji: 愛 -->
+<character>
+    <literal>愛</literal>
+    <codepoint>
+        <cp_value cp_type="ucs">611b</cp_value>
+        <cp_value cp_type="jis208">1-16-06</cp_value>
+    </codepoint>
+    <radical>
+        <rad_value rad_type="classical">61</rad_value>
+        <rad_value rad_type="nelson_c">87</rad_value>
+    </radical>
+    <misc>
+        <grade>4</grade>
+        <stroke_count>13</stroke_count>
+        <freq>640</freq>
+        <jlpt>2</jlpt>
+    </misc>
+    <dic_number>
+        <dic_ref dr_type="nelson_c">2829</dic_ref>
+        <dic_ref dr_type="nelson_n">1927</dic_ref>
+        <dic_ref dr_type="halpern_njecd">2492</dic_ref>
+        <dic_ref dr_type="halpern_kkd">3133</dic_ref>
+        <dic_ref dr_type="halpern_kkld">1606</dic_ref>
+        <dic_ref dr_type="halpern_kkld_2ed">2191</dic_ref>
+        <dic_ref dr_type="heisig">737</dic_ref>
+        <dic_ref dr_type="heisig6">796</dic_ref>
+        <dic_ref dr_type="gakken">436</dic_ref>
+        <dic_ref dr_type="oneill_names">2018</dic_ref>
+        <dic_ref dr_type="oneill_kk">456</dic_ref>
+        <dic_ref dr_type="moro" m_vol="4" m_page="1123">10947</dic_ref>
+        <dic_ref dr_type="henshall">417</dic_ref>
+        <dic_ref dr_type="sh_kk">259</dic_ref>
+        <dic_ref dr_type="sh_kk2">259</dic_ref>
+        <dic_ref dr_type="sakade">339</dic_ref>
+        <dic_ref dr_type="jf_cards">545</dic_ref>
+        <dic_ref dr_type="henshall3">441</dic_ref>
+        <dic_ref dr_type="tutt_cards">602</dic_ref>
+        <dic_ref dr_type="crowley">268</dic_ref>
+        <dic_ref dr_type="kanji_in_context">1079</dic_ref>
+        <dic_ref dr_type="kodansha_compact">790</dic_ref>
+        <dic_ref dr_type="maniette">745</dic_ref>
+    </dic_number>
+    <query_code>
+        <q_code qc_type="skip">2-4-9</q_code>
+        <q_code qc_type="sh_desc">4i10.1</q_code>
+        <q_code qc_type="four_corner">2024.7</q_code>
+        <q_code qc_type="deroo">2067</q_code>
+        <q_code qc_type="skip" skip_misclass="posn">2-1-12</q_code>
+        <q_code qc_type="skip" skip_misclass="posn">2-6-7</q_code>
+    </query_code>
+    <reading_meaning>
+        <rmgroup>
+            <reading r_type="pinyin">ai4</reading>
+            <reading r_type="korean_r">ae</reading>
+            <reading r_type="korean_h">애</reading>
+            <reading r_type="vietnam">Ái</reading>
+            <reading r_type="ja_on">アイ</reading>
+            <reading r_type="ja_kun">いと.しい</reading>
+            <reading r_type="ja_kun">かな.しい</reading>
+            <reading r_type="ja_kun">め.でる</reading>
+            <reading r_type="ja_kun">お.しむ</reading>
+            <reading r_type="ja_kun">まな</reading>
+            <meaning>love</meaning>
+            <meaning>affection</meaning>
+            <meaning>favourite</meaning>
+            <meaning m_lang="fr">amour</meaning>
+            <meaning m_lang="fr">affection</meaning>
+            <meaning m_lang="fr">favori</meaning>
+            <meaning m_lang="es">amor</meaning>
+            <meaning m_lang="es">afecto</meaning>
+            <meaning m_lang="es">favorito</meaning>
+            <meaning m_lang="pt">amor</meaning>
+            <meaning m_lang="pt">afeição</meaning>
+            <meaning m_lang="pt">favorito</meaning>
+        </rmgroup>
+        <nanori>あ</nanori>
+        <nanori>あし</nanori>
+        <nanori>え</nanori>
+        <nanori>かな</nanori>
+        <nanori>なる</nanori>
+        <nanori>めぐ</nanori>
+        <nanori>めぐみ</nanori>
+        <nanori>よし</nanori>
+        <nanori>ちか</nanori>
+    </reading_meaning>
+</character>
