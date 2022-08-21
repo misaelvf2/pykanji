@@ -7,4 +7,10 @@ class Kanji:
         self.misc = misc
 
     def __str__(self):
-        return f"<{self.literal}>\n meanings={self.meanings}\n onyomi={self.onyomi}\n kunyomi={self.kunyomi}\n misc={self.misc}"
+        return (
+            f"<{self.literal}>\n"
+            f"meanings={self.meanings}\n"
+            f"onyomi={self.onyomi}\n"
+            f"kunyomi={self.kunyomi}\n"
+            f"misc={self.misc}"
+        )
