@@ -31,28 +31,22 @@ class KanjiDicReader:
         if not character.reading_meaning:
             return []
         meanings = character.reading_meaning.rmgroup
-        return list(
-            map(
-                lambda x: x.string,
-                meanings.find_all("meaning", m_lang=False, recursive=False),
-            )
-        )
+        return [
+            x.string
+            for x in meanings.find_all("meaning", m_lang=False, recursive=False)
+        ]
 
     def find_onyomi(self, character):
         if not character.reading_meaning:
             return []
         readings = character.reading_meaning.rmgroup
-        return list(
-            map(lambda x: x.string, readings.find_all(r_type="ja_on", recursive=False))
-        )
+        return [x.string for x in readings.find_all(r_type="ja_on", recursive=False)]
 
     def find_kunyomi(self, character):
         if not character.reading_meaning:
             return []
         readings = character.reading_meaning.rmgroup
-        return list(
-            map(lambda x: x.string, readings.find_all(r_type="ja_kun", recursive=False))
-        )
+        return [x.string for x in readings.find_all(r_type="ja_kun", recursive=False)]
 
     def find_misc(self, character):
         misc_elem = character.misc
