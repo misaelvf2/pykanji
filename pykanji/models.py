@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -22,6 +22,9 @@ class Kanji(Base):
     # TODO Split readings column into kun- and on- columns
     readings = relationship("Reading", secondary=kanji_reading, back_populates="kanji")
 
+    def __repr__(self):
+        return f"Kanji(id={self.id!r}, literal={self.literal!r}, meanings={self.meanings!r}, readings={self.readings!r})"
+
 
 class Meaning(Base):
     __tablename__ = "meaning"
@@ -31,6 +34,9 @@ class Meaning(Base):
     kanji_id = Column(Integer, ForeignKey("kanji.id"))
     kanji = relationship("Kanji", back_populates="meanings")
 
+    def __repr__(self):
+        return f"Meaning(id={self.id!r}, meaning={self.meaning!r})"
+
 
 class Reading(Base):
     __tablename__ = "reading"
@@ -39,3 +45,11 @@ class Reading(Base):
     category = Column(String)
     reading = Column(String)
     kanji = relationship("Kanji", secondary=kanji_reading, back_populates="readings")
+
+    def __repr__(self):
+        return f"Reading(id={self.id!r}, category={self.category!r}, reading={self.reading!r})"
+
+
+if __name__ == "__main__":
+    engine = create_engine("sqlite+pysqlite:///kanji.db", echo=True, future=True)
+    Base.metadata.create_all(engine)
