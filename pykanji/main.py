@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -22,14 +22,20 @@ def store_kanji():
             session.rollback()
 
 
+def most_common_readings(n):
+    stmt = (
+        select(Reading.reading, func.count(Reading.reading).label("count"))
+        .where(Reading.category == "onyomi")
+        .order_by(func.count(Reading.reading).desc())
+        .group_by(Reading.reading)
+        .limit(n)
+    )
+    return stmt
+
+
 if __name__ == "__main__":
     engine = create_engine("sqlite+pysqlite:///kanji.db", echo=False, future=True)
 
     with Session(engine) as session:
-        stmt = select(Reading).where(Reading.reading.in_(["コウ"]))
-
-        count = 0
-        for res in session.scalars(stmt):
-            print(res.kanji[0].literal)
-            count += 1
-        print(f"{count} Kanji")
+        result = session.execute(most_common_readings(5))
+        print(result.all())
