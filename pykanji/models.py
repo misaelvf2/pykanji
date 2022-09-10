@@ -17,7 +17,7 @@ class Kanji(Base):
     __tablename__ = "kanji"
 
     id = Column(Integer, primary_key=True)
-    literal = Column(String)
+    literal = Column(String, unique=True)
     meanings = relationship("Meaning", back_populates="kanji")
     # TODO Split readings column into kun- and on- columns
     readings = relationship("Reading", secondary=kanji_reading, back_populates="kanji")

@@ -1,4 +1,4 @@
-from Kanji import Kanji
+from models import Kanji, Meaning, Reading
 
 
 class KanjiDicReader:
@@ -36,17 +36,28 @@ class KanjiDicReader:
             for x in meanings.find_all("meaning", m_lang=False, recursive=False)
         ]
 
+    def find_readings(self, character):
+        result = self.find_onyomi(character)
+        result.extend(self.find_kunyomi(character))
+        return result
+
     def find_onyomi(self, character):
         if not character.reading_meaning:
             return []
         readings = character.reading_meaning.rmgroup
-        return [x.string for x in readings.find_all(r_type="ja_on", recursive=False)]
+        return [
+            (x.string, "onyomi")
+            for x in readings.find_all(r_type="ja_on", recursive=False)
+        ]
 
     def find_kunyomi(self, character):
         if not character.reading_meaning:
             return []
         readings = character.reading_meaning.rmgroup
-        return [x.string for x in readings.find_all(r_type="ja_kun", recursive=False)]
+        return [
+            (x.string, "kunyomi")
+            for x in readings.find_all(r_type="ja_kun", recursive=False)
+        ]
 
     def find_misc(self, character):
         misc_elem = character.misc
@@ -59,19 +70,21 @@ class KanjiDicReader:
         return misc
 
     def make_all_kanji(self):
-        kanji = []
         for character in self.characters:
-            kanji.append(self.make_kanji(character))
-        return kanji
+            yield self.make_kanji(character)
 
     def make_kanji(self, character):
         try:
             return Kanji(
                 literal=self.find_literal(character),
-                meanings=self.find_meanings(character),
-                onyomi=self.find_onyomi(character),
-                kunyomi=self.find_kunyomi(character),
-                misc=self.find_misc(character),
+                meanings=[
+                    Meaning(meaning=meaning)
+                    for meaning in self.find_meanings(character)
+                ],
+                readings=[
+                    Reading(category=category, reading=reading)
+                    for reading, category in self.find_readings(character)
+                ],
             )
         except AttributeError:
             print(f"Failed on {character.literal.string}")
