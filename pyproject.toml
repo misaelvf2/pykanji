@@ -5,7 +5,7 @@ description = ""
 authors = ["Misael Valentin <misael.vf2@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 beautifulsoup4 = "^4.11.1"
 lxml = "^4.9.1"
 SQLAlchemy = {version = "^1.4.40", allow-prereleases = true}
