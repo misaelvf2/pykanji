@@ -1,8 +1,7 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from database import Base
 
 kanji_reading = Table(
     "kanji_reading",
@@ -48,8 +47,3 @@ class Reading(Base):
 
     def __repr__(self):
         return f"Reading(id={self.id!r}, category={self.category!r}, reading={self.reading!r})"
-
-
-if __name__ == "__main__":
-    engine = create_engine("sqlite+pysqlite:///kanji.db", echo=True, future=True)
-    Base.metadata.create_all(engine)

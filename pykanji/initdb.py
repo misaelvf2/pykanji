@@ -1,13 +1,22 @@
 from bs4 import BeautifulSoup
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
+import models
+from database import SessionLocal, engine
 from KanjiDicReader import KanjiDicReader
+
+models.Base.metadata.create_all(bind=engine)
+
+KANJIDIC_PATH = "kanjidic2.xml"
+
+
+def create_tables():
+    models.Base.metadata.create_all(engine)
 
 
 def store_kanji():
-    with Session(engine) as session:
-        with open("kanjidic2.xml") as fp:
+    with SessionLocal() as session:
+        with open(KANJIDIC_PATH) as fp:
             soup = BeautifulSoup(fp, "xml")
 
             my_reader = KanjiDicReader(soup=soup)
@@ -21,4 +30,5 @@ def store_kanji():
 
 
 if __name__ == "__main__":
+    create_tables()
     store_kanji()
