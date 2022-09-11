@@ -1,41 +1,50 @@
-from bs4 import BeautifulSoup
+import click
 from sqlalchemy import create_engine, func, select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from KanjiDicReader import KanjiDicReader
 from models import Kanji, Reading
 
 
-def store_kanji():
+@click.group()
+def cli():
+    pass
+
+
+@click.command()
+@click.option(
+    "-l", "--literal", required=True, multiple=True, help="The Kanji to look up."
+)
+def kanji(literal):
+    engine = create_engine("sqlite+pysqlite:///../kanji.db", echo=False, future=True)
+    stmt = select(Kanji).where(Kanji.literal.in_(literal))
     with Session(engine) as session:
-        with open("kanjidic2.xml") as fp:
-            soup = BeautifulSoup(fp, "xml")
-
-            my_reader = KanjiDicReader(soup=soup)
-
-            for kanji in my_reader.make_all_kanji():
-                session.add(kanji)
-        try:
-            session.commit()
-        except IntegrityError:
-            session.rollback()
+        for row in session.scalars(stmt):
+            click.echo(f"{row!r}")
 
 
-def most_common_readings(n):
+@click.command()
+@click.option(
+    "-n",
+    "--count",
+    default=1,
+    show_default=True,
+    help="Number of most common readings to look up.",
+)
+def most_common_readings(count):
+    engine = create_engine("sqlite+pysqlite:///../kanji.db", echo=False, future=True)
     stmt = (
         select(Reading.reading, func.count(Reading.reading).label("count"))
         .where(Reading.category == "onyomi")
         .order_by(func.count(Reading.reading).desc())
         .group_by(Reading.reading)
-        .limit(n)
+        .limit(count)
     )
-    return stmt
+    with Session(engine) as session:
+        for row in session.execute(stmt):
+            click.echo(f"Reading: {row[0]}, Frequency: {row[1]}")
 
 
 if __name__ == "__main__":
-    engine = create_engine("sqlite+pysqlite:///kanji.db", echo=False, future=True)
-
-    with Session(engine) as session:
-        result = session.execute(most_common_readings(5))
-        print(result.all())
+    cli.add_command(kanji)
+    cli.add_command(most_common_readings)
+    cli()
