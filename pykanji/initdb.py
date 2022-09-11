@@ -5,9 +5,9 @@ import models
 from database import SessionLocal, engine
 from KanjiDicReader import KanjiDicReader
 
-models.Base.metadata.create_all(bind=engine)
-
 KANJIDIC_PATH = "kanjidic2.xml"
+
+models.Base.metadata.create_all(bind=engine)
 
 
 def create_tables():
