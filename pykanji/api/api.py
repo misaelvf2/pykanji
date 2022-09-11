@@ -1,4 +1,3 @@
-# from .. import models
 import pykanji.models as models
 from fastapi import Depends, FastAPI, HTTPException
 from pykanji.api import crud, schemas
