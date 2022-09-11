@@ -1,15 +1,15 @@
-from models import Kanji
 from pydantic import BaseModel
 
 
 class MeaningBase(BaseModel):
     meaning: str
 
+    class Config:
+        orm_mode = True
 
-class Meaning(MeaningBase):
-    id: int
-    kanji_id: int
-    kanji: Kanji
+
+class KanjiBase(BaseModel):
+    literal: str
 
     class Config:
         orm_mode = True
@@ -20,23 +20,22 @@ class ReadingBase(BaseModel):
     category: str
     reading: str
 
-
-class Reading(ReadingBase):
-    id: int
-    kanji: Kanji
-
     class Config:
         orm_mode = True
 
 
-class KanjiBase(BaseModel):
-    literal: str
+class Meaning(MeaningBase):
+    id: int
+    kanji_id: int
+    kanji: KanjiBase
+
+
+class Reading(ReadingBase):
+    id: int
+    kanji: KanjiBase
 
 
 class Kanji(KanjiBase):
     id: int
-    meanings: list[Meaning]
-    readings: list[Reading]
-
-    class Config:
-        orm_mode = True
+    meanings: list[MeaningBase]
+    readings: list[ReadingBase]

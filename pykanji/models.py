@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
-from database import Base
+from pykanji.database import Base
 
 kanji_reading = Table(
     "kanji_reading",
