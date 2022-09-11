@@ -191,8 +191,6 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
-<<<<<<< HEAD
-=======
 name = "starlette"
 version = "0.19.1"
 description = "The little ASGI library that shines."
@@ -261,7 +259,6 @@ python-versions = ">=3.7"
 anyio = ">=3.0.0,<4"
 
 [[package]]
->>>>>>> c72b3d1... Bump up to Python 3.10
 name = "wcwidth"
 version = "0.2.5"
 description = "Measures the displayed width of unicode strings in a terminal"
