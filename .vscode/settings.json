@@ -7,5 +7,6 @@
         "./pykanji"
     ],
     "sqlite.logLevel": "DEBUG",
-    "python.pythonPath": ".venv/bin/python3.10"
+    "python.pythonPath": ".venv/bin/python3.10",
+    "esbonio.sphinx.confDir": ""
 }
