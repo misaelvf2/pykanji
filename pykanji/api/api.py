@@ -1,3 +1,5 @@
+import pprint
+
 import pykanji.models as models
 from fastapi import Depends, FastAPI, HTTPException
 from pykanji.api import crud, schemas
@@ -23,4 +25,19 @@ def read_kanji(literal: str, db: Session = Depends(get_db)):
     db_kanji = crud.get_kanji(db, literal=literal)
     if db_kanji is None:
         raise HTTPException(status_code=404, detail="Kanji not found")
-    return db_kanji
+    obj = {
+        "id": db_kanji.id,
+        "literal": db_kanji.literal,
+        "meanings": [meaning.meaning for meaning in db_kanji.meanings],
+        "onyomi": [
+            reading.reading
+            for reading in db_kanji.readings
+            if reading.category == "onyomi"
+        ],
+        "kunyomi": [
+            reading.reading
+            for reading in db_kanji.readings
+            if reading.category == "kunyomi"
+        ],
+    }
+    return obj

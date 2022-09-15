@@ -37,5 +37,6 @@ class Reading(ReadingBase):
 
 class Kanji(KanjiBase):
     id: int
-    meanings: list[MeaningBase]
-    readings: list[ReadingBase]
+    meanings: list[str]
+    onyomi: list[str]
+    kunyomi: list[str]
