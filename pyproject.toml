@@ -10,6 +10,8 @@ beautifulsoup4 = "^4.11.1"
 lxml = "^4.9.1"
 SQLAlchemy = {version = "^1.4.40", allow-prereleases = true}
 click = "^8.1.3"
+fastapi = "^0.82.0"
+uvicorn = {extras = ["standard"], version = "^0.18.3"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

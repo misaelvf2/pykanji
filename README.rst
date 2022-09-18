@@ -1,0 +1,1 @@
+Start server with uvicorn --app-dir=./pykanji/api api:app --reload
