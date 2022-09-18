@@ -1,5 +1,5 @@
 import pykanji.models as models
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from pykanji.api.v1 import crud, schemas
 from pykanji.database import SessionLocal, engine
 from sqlalchemy.orm import Session
@@ -51,9 +51,15 @@ def read_kanji(literal: str, db: Session = Depends(get_db)):
 @app.get(
     "/api/v1/kanji", response_model=schemas.Response, response_model_exclude_unset=True
 )
+# TODO: Look into implementing more advanced filtering logic
+# with a dedicated "filter" query parameter
+# Query parameters are currently interpreted as follows:
+# (M1 | M2 | ... | Mn) && (R1 | R2 | ... | Rm),
+# Where M = Meaning, R = reading
+# This logic is implemented in the crud.py DB call
 def read_all_kanji(
-    reading: str | None = None,
-    meaning: str | None = None,
+    reading: list[str] | None = Query(default=None),
+    meaning: list[str] | None = Query(default=None),
     limit: int = 10,
     db: Session = Depends(get_db),
 ):

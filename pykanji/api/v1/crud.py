@@ -1,4 +1,5 @@
 from pykanji import models
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 
@@ -9,8 +10,8 @@ def read_kanji(db: Session, literal: str):
 # TODO: Figure out if there is a better way to do this.
 def read_all_kanji(
     db: Session,
-    reading: str | None = None,
-    meaning: str | None = None,
+    reading: list[str] | None = None,
+    meaning: list[str] | None = None,
     limit: int = 10,
 ):
     query = db.query(models.Kanji)
@@ -21,9 +22,10 @@ def read_all_kanji(
     if reading is not None:
         query = query.filter(
             models.Kanji.id == models.kanji_reading.c.kanji_id,
-            models.Reading.reading == reading,
         )
+        query = query.filter(models.Reading.reading.in_(reading))
     if meaning is not None:
-        query = query.filter(models.Meaning.meaning.ilike(f"%{meaning}%"))
+        exps = [models.Meaning.meaning.ilike(f"%{m}") for m in meaning]
+        query = query.filter(or_(*exps))
     query = query.limit(limit).all()
     return query
