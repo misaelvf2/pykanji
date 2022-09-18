@@ -1,5 +1,3 @@
-import pprint
-
 import pykanji.models as models
 from fastapi import Depends, FastAPI, HTTPException
 from pykanji.api.v1 import crud, schemas
@@ -46,5 +44,40 @@ def read_kanji(literal: str, db: Session = Depends(get_db)):
             ],
         },
         "links": {"self": f"http://127.0.0.1:8000/api/v1/kanji/{literal}"},
+    }
+    return res
+
+
+@app.get(
+    "/api/v1/kanji", response_model=schemas.Response, response_model_exclude_unset=True
+)
+def read_all_kanji(
+    reading: str | None = None,
+    meaning: str | None = None,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+):
+    db_kanji = crud.read_all_kanji(db, reading=reading, meaning=meaning, limit=limit)
+    if db_kanji is None:
+        raise HTTPException(status_code=404, detail="No Kanji found matching criteria")
+    res = {
+        "data": [
+            {
+                "id": str(kanji.id),
+                "literal": kanji.literal,
+                "meanings": [meaning.meaning for meaning in kanji.meanings],
+                "onyomi": [
+                    reading.reading
+                    for reading in kanji.readings
+                    if reading.category == "onyomi"
+                ],
+                "kunyomi": [
+                    reading.reading
+                    for reading in kanji.readings
+                    if reading.category == "kunyomi"
+                ],
+            }
+            for kanji in db_kanji
+        ]
     }
     return res

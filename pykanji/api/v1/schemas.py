@@ -14,5 +14,5 @@ class Links(BaseModel):
 
 
 class Response(BaseModel):
-    data: Kanji | None
+    data: Kanji | list[Kanji] | None
     links: Links | None
