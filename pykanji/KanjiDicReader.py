@@ -1,4 +1,4 @@
-from models import Kanji, Meaning, Reading
+from models import Kanji, Meaning, Nanori, Reading
 
 
 class KanjiDicReader:
@@ -69,6 +69,30 @@ class KanjiDicReader:
         }
         return misc
 
+    def find_grade(self, character):
+        misc_elem = character.misc
+        return int(misc_elem.grade.string) if misc_elem.grade else 0
+
+    def find_stroke_count(self, character):
+        misc_elem = character.misc
+        return int(misc_elem.stroke_count.string) if misc_elem.stroke_count else 0
+
+    def find_jlpt(self, character):
+        misc_elem = character.misc
+        return int(misc_elem.jlpt.string) if misc_elem.jlpt else 0
+
+    def find_frequency(self, character):
+        misc_elem = character.misc
+        return int(misc_elem.freq.string) if misc_elem.freq else 0
+
+    def find_nanori(self, character):
+        if not character.reading_meaning:
+            return []
+        if not character.reading_meaning.nanori:
+            return []
+        reading_meaning = character.reading_meaning
+        return [x.string for x in reading_meaning.find_all("nanori", recursive=False)]
+
     def make_all_kanji(self):
         for character in self.characters:
             yield self.make_kanji(character)
@@ -77,6 +101,10 @@ class KanjiDicReader:
         try:
             return Kanji(
                 literal=self.find_literal(character),
+                grade=self.find_grade(character),
+                stroke_count=self.find_stroke_count(character),
+                jlpt=self.find_jlpt(character),
+                frequency=self.find_frequency(character),
                 meanings=[
                     Meaning(meaning=meaning)
                     for meaning in self.find_meanings(character)
@@ -84,6 +112,9 @@ class KanjiDicReader:
                 readings=[
                     Reading(category=category, reading=reading)
                     for reading, category in self.find_readings(character)
+                ],
+                nanori=[
+                    Nanori(nanori=nanori) for nanori in self.find_nanori(character)
                 ],
             )
         except AttributeError:
