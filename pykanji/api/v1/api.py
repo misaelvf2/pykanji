@@ -1,10 +1,7 @@
-import pykanji.models as models
 from fastapi import Depends, FastAPI, HTTPException, Query
 from pykanji.api.v1 import crud, schemas
-from pykanji.database import SessionLocal, engine
+from pykanji.database import SessionLocal
 from sqlalchemy.orm import Session
-
-models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -32,6 +29,10 @@ def read_kanji(literal: str, db: Session = Depends(get_db)):
             "id": str(db_kanji.id),
             "literal": db_kanji.literal,
             "meanings": [meaning.meaning for meaning in db_kanji.meanings],
+            "grade": db_kanji.grade,
+            "stroke_count": db_kanji.stroke_count,
+            "jlpt": db_kanji.jlpt,
+            "frequency": db_kanji.frequency,
             "onyomi": [
                 reading.reading
                 for reading in db_kanji.readings
@@ -42,6 +43,7 @@ def read_kanji(literal: str, db: Session = Depends(get_db)):
                 for reading in db_kanji.readings
                 if reading.category == "kunyomi"
             ],
+            "nanori": [nanori.nanori for nanori in db_kanji.nanori],
         },
         "links": {"self": f"http://127.0.0.1:8000/api/v1/kanji/{literal}"},
     }
@@ -72,6 +74,10 @@ def read_all_kanji(
                 "id": str(kanji.id),
                 "literal": kanji.literal,
                 "meanings": [meaning.meaning for meaning in kanji.meanings],
+                "grade": kanji.grade,
+                "stroke_count": kanji.stroke_count,
+                "jlpt": kanji.jlpt,
+                "frequency": kanji.frequency,
                 "onyomi": [
                     reading.reading
                     for reading in kanji.readings
@@ -82,6 +88,7 @@ def read_all_kanji(
                     for reading in kanji.readings
                     if reading.category == "kunyomi"
                 ],
+                "nanori": [nanori.nanori for nanori in kanji.nanori],
             }
             for kanji in db_kanji
         ]
