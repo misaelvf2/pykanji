@@ -1,6 +1,6 @@
 import click
 
-from pykanji.api.v1 import crud
+from pykanji import crud
 from pykanji.database import SessionLocal
 
 

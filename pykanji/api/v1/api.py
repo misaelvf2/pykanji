@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException, Query
-from pykanji.api.v1 import crud, schemas
+from pykanji import crud
+from pykanji.api.v1 import schemas
 from pykanji.database import SessionLocal
 from sqlalchemy.orm import Session
 

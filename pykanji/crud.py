@@ -1,6 +1,7 @@
-from pykanji import models
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
+
+from pykanji import models
 
 
 def read_kanji(db: Session, literal: str):
