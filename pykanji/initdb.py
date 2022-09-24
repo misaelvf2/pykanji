@@ -12,12 +12,13 @@ def create_tables():
     models.Base.metadata.create_all(engine)
 
 
-def store_kanji():
+# TODO: Refactor so Session is passed via dependency injection
+def store_kanji(limit: int = None):
     with SessionLocal() as session:
         with open(KANJIDIC_PATH) as fp:
             soup = BeautifulSoup(fp, "xml")
 
-            my_reader = KanjiDicReader(soup=soup)
+            my_reader = KanjiDicReader(soup=soup, limit=limit)
 
             for kanji in my_reader.make_all_kanji():
                 session.add(kanji)
