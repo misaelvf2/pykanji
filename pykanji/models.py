@@ -32,7 +32,12 @@ class Kanji(Base):
     nanori = relationship("Nanori", secondary=kanji_nanori, back_populates="kanji")
 
     def __repr__(self):
-        return f"Kanji(id={self.id!r}, literal={self.literal!r}, meanings={self.meanings!r}, readings={self.readings!r})"
+        return (
+            f"Kanji(id={self.id!r}, literal={self.literal!r}, grade={self.grade!r}, stroke_count={self.stroke_count!r} "
+            f"jlpt={self.jlpt!r}, frequency={self.frequency!r}, "
+            f"meanings={self.meanings!r}, readings={self.readings!r}), "
+            f"nanori={self.nanori!r}"
+        )
 
 
 class Meaning(Base):
