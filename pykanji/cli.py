@@ -1,9 +1,11 @@
 import click
+from rich import box
 from rich.console import Console
 from rich.table import Table
 
 from pykanji import crud
 from pykanji.database import SessionLocal
+from views import KanjiView
 
 console = Console()
 
@@ -23,39 +25,53 @@ def cli():
 
 
 @click.command()
-@click.argument("literal")
-def kanji(literal, db=get_db()):
-    table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("Literal")
-    table.add_column("Grade")
-    table.add_column("Stroke Count")
-    table.add_column("JLPT")
-    table.add_column("Frequency")
-    table.add_column("Meanings")
-    table.add_column("Readings")
-    table.add_column("Nanori")
+@click.argument("literals", nargs=-1)
+def kanji(literals, db=get_db()):
+    # table = Table(
+    #     title="Kanji Information",
+    #     box=box.HORIZONTALS,
+    #     show_header=True,
+    #     show_lines=True,
+    #     width=125,
+    # )
+    # table.add_column("#")
+    # table.add_column("Literal")
+    # table.add_column("Grade")
+    # table.add_column("Stroke Count")
+    # table.add_column("JLPT")
+    # table.add_column("Frequency")
+    # table.add_column("Meanings")
+    # table.add_column("Kun'yomi")
+    # table.add_column("On'yomi")
+    # table.add_column("Nanori")
 
-    result = crud.read_kanji(db=db, literal=literal)
+    view = KanjiView(title="Kanji Information")
+
+    result = crud.read_multiple_kanji(db=db, literals=[literal for literal in literals])
     if result is None:
-        click.echo("Kanji not found!")
+        click.echo("No Kanji found!")
     else:
-        table.add_row(
-            f"{result.literal}",
-            f"{result.grade}",
-            f"{result.stroke_count}",
-            f"{result.jlpt}",
-            f"{result.frequency}",
-            f"{', '.join([r.meaning for r in result.meanings])}",
-            f"{', '.join([r.reading for r in result.readings])}",
-            f"{', '.join([r.nanori for r in result.nanori])}",
-        )
-        console.print(table)
+        for i, kanji in enumerate(result):
+            view.add_kanji(i, kanji)
+            # table.add_row(
+            #     f"{i}",
+            #     f"{kanji.literal}",
+            #     f"{kanji.grade}",
+            #     f"{kanji.stroke_count}",
+            #     f"{kanji.jlpt}",
+            #     f"{kanji.frequency}",
+            #     f"{', '.join([k.meaning for k in kanji.meanings])}",
+            #     f"{', '.join([k.reading for k in kanji.readings if k.category == 'kunyomi'])}",
+            #     f"{', '.join([k.reading for k in kanji.readings if k.category == 'onyomi'])}",
+            #     f"{', '.join([k.nanori for k in kanji.nanori])}",
+            # )
+        console.print(view.table)
 
 
 @click.command()
 @click.argument("english_keyword")
 def meaning(english_keyword, db=get_db()):
-    table = Table(show_header=True, header_style="bold magenta")
+    table = Table(show_header=True)
     table.add_column("#")
     table.add_column("Literal")
 
@@ -72,7 +88,12 @@ def meaning(english_keyword, db=get_db()):
 @click.argument("n")
 @click.option("-d", "--descending", is_flag=True, help="Return in descending order.")
 def frequent(n, descending, db=get_db()):
-    table = Table(show_header=True, header_style="bold magenta")
+    table = Table(
+        title=f"{n} {'Least' if descending else 'Most'} Frequent Kanji",
+        show_header=True,
+        box=box.SIMPLE,
+        highlight=True,
+    )
     table.add_column("#")
     table.add_column("Literal")
     table.add_column("Frequency")
