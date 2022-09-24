@@ -1,7 +1,7 @@
 from rich import box
 from rich.table import Table
 
-# from models import Kanji
+from models import Kanji
 
 
 class KanjiView:
@@ -32,7 +32,7 @@ class KanjiView:
         self._table.add_column("On'yomi")
         self._table.add_column("Nanori")
 
-    def add_kanji(self, row_id, kanji):
+    def add_kanji(self, row_id, kanji: Kanji):
         self._table.add_row(
             f"{row_id}",
             f"{kanji.literal}",
