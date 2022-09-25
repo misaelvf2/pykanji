@@ -41,7 +41,7 @@ def read_all_kanji(
 def read_most_frequent_kanji(db: Session, n: int, descending=False):
     query = (
         db.query(Kanji)
-        .filter(Kanji.frequency > 0)
+        .filter(Kanji.frequency != None)
         .order_by(Kanji.frequency.desc() if descending else Kanji.frequency)
         .limit(n)
         .all()

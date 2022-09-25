@@ -59,31 +59,21 @@ class KanjiDicReader:
             for x in readings.find_all(r_type="ja_kun", recursive=False)
         ]
 
-    def find_misc(self, character):
-        misc_elem = character.misc
-        misc = {
-            "grade": int(misc_elem.grade.string) if misc_elem.grade else 0,
-            "stroke_count": int(misc_elem.stroke_count.string),
-            "frequency": int(misc_elem.freq.string) if misc_elem.freq else 0,
-            "jlpt": int(misc_elem.jlpt.string) if misc_elem.jlpt else 0,
-        }
-        return misc
-
     def find_grade(self, character):
         misc_elem = character.misc
-        return int(misc_elem.grade.string) if misc_elem.grade else 0
+        return int(misc_elem.grade.string) if misc_elem.grade else None
 
     def find_stroke_count(self, character):
         misc_elem = character.misc
-        return int(misc_elem.stroke_count.string) if misc_elem.stroke_count else 0
+        return int(misc_elem.stroke_count.string) if misc_elem.stroke_count else None
 
     def find_jlpt(self, character):
         misc_elem = character.misc
-        return int(misc_elem.jlpt.string) if misc_elem.jlpt else 0
+        return int(misc_elem.jlpt.string) if misc_elem.jlpt else None
 
     def find_frequency(self, character):
         misc_elem = character.misc
-        return int(misc_elem.freq.string) if misc_elem.freq else 0
+        return int(misc_elem.freq.string) if misc_elem.freq else None
 
     def find_nanori(self, character):
         if not character.reading_meaning:
