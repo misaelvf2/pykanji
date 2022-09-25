@@ -25,6 +25,7 @@ class KanjiLookUp:
         self._table.add_column("#")
         self._table.add_column("Literal")
         self._table.add_column("Grade")
+        self._table.add_column("Stroke Count")
         self._table.add_column("JLPT")
         self._table.add_column("Frequency")
         self._table.add_column("Meanings")
