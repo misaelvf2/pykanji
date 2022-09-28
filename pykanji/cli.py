@@ -4,7 +4,7 @@ from rich.console import Console
 from initdb import create_tables, store_kanji
 from pykanji import crud
 from pykanji.database import SessionLocal
-from views import FrequentKanji, KanjiLookUp, MeaningLookUp
+from views import FrequentKanji, KanjiLookUp, MeaningLookUp, OnyomiLookUp
 
 console = Console()
 
@@ -80,9 +80,24 @@ def frequent(n, descending, db=get_db()):
         console.print(view.table)
 
 
+@click.command()
+@click.argument("onyomi")
+def onyomi(onyomi, db=get_db()):
+    view = OnyomiLookUp(title=f"Results for {onyomi}")
+
+    result = crud.read_all_kanji(db=db, reading=[onyomi])
+    if result is None:
+        click.echo("None found!")
+    else:
+        for i, kanji in enumerate(result):
+            view.add_kanji(i, kanji)
+        console.print(view.table)
+
+
 if __name__ == "__main__":
     cli.add_command(initdb)
     cli.add_command(kanji)
     cli.add_command(meaning)
     cli.add_command(frequent)
+    cli.add_command(onyomi)
     cli()

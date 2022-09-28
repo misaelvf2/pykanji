@@ -4,7 +4,35 @@ from rich.table import Table
 from models import Kanji
 
 
-class KanjiLookUp:
+class BaseView:
+    def __init__(
+        self,
+        title,
+        box_const=box.HORIZONTALS,
+        show_header=True,
+        show_lines=True,
+    ):
+        self._options = {
+            "title": title,
+            "box": box_const,
+            "show_header": show_header,
+            "show_lines": show_lines,
+        }
+
+    @property
+    def table(self):
+        raise NotImplementedError
+
+    @property
+    def options(self):
+        return self._options
+
+    @property
+    def columns(self):
+        raise NotImplementedError
+
+
+class KanjiLookUp(BaseView):
     def __init__(
         self,
         title,
@@ -13,25 +41,27 @@ class KanjiLookUp:
         show_lines=True,
         width=125,
     ):
-        self._columns = {
-            "title": title,
-            "box": box_const,
-            "show_header": show_header,
-            "show_lines": show_lines,
-            "width": width,
-        }
+        super().__init__(title, box_const, show_header, show_lines)
 
-        self._table = Table(**self._columns)
-        self._table.add_column("#")
-        self._table.add_column("Literal")
-        self._table.add_column("Grade")
-        self._table.add_column("Stroke Count")
-        self._table.add_column("JLPT")
-        self._table.add_column("Frequency")
-        self._table.add_column("Meanings")
-        self._table.add_column("Kun'yomi")
-        self._table.add_column("On'yomi")
-        self._table.add_column("Nanori")
+        self._columns = [
+            "#",
+            "Literal",
+            "Grade",
+            "Stroke Count",
+            "JLPT",
+            "Frequency",
+            "Meanings",
+            "Kun'yomi",
+            "On'yomi",
+            "Nanori",
+        ]
+
+        self._options.update({"width": width})
+
+        self._table = Table(**self._options)
+
+        for column in self._columns:
+            self._table.add_column(column)
 
     def add_kanji(self, row_id, kanji: Kanji):
         self._table.add_row(
@@ -50,8 +80,12 @@ class KanjiLookUp:
     def table(self):
         return self._table
 
+    @property
+    def columns(self):
+        return self._columns
 
-class MeaningLookUp:
+
+class MeaningLookUp(BaseView):
     def __init__(
         self,
         title,
@@ -59,16 +93,17 @@ class MeaningLookUp:
         show_header=True,
         show_lines=True,
     ):
-        self._columns = {
-            "title": title,
-            "box": box_const,
-            "show_header": show_header,
-            "show_lines": show_lines,
-        }
+        super().__init__(title, box_const, show_header, show_lines)
 
-        self._table = Table(**self._columns)
-        self._table.add_column("#")
-        self._table.add_column("Literal")
+        self._columns = [
+            "#",
+            "Literal",
+        ]
+
+        self._table = Table(**self._options)
+
+        for column in self._columns:
+            self._table.add_column(column)
 
     def add_kanji(self, row_id, kanji: Kanji):
         self._table.add_row(
@@ -80,8 +115,12 @@ class MeaningLookUp:
     def table(self):
         return self._table
 
+    @property
+    def columns(self):
+        return self._columns
 
-class FrequentKanji:
+
+class OnyomiLookUp(BaseView):
     def __init__(
         self,
         title,
@@ -89,17 +128,55 @@ class FrequentKanji:
         show_header=True,
         show_lines=True,
     ):
+        super().__init__(title, box_const, show_header, show_lines)
+
+        self._columns = [
+            "#",
+            "Literal",
+            "On'yomi",
+        ]
+
+        self._table = Table(**self._options)
+
+        for column in self._columns:
+            self._table.add_column(column)
+
+    def add_kanji(self, row_id, kanji: Kanji):
+        self._table.add_row(
+            f"{row_id}",
+            f"{kanji.literal}",
+            f"{', '.join([k.reading for k in kanji.readings if k.category == 'onyomi'])}",
+        )
+
+    @property
+    def table(self):
+        return self._table
+
+    @property
+    def columns(self):
+        return self._columns
+
+
+class FrequentKanji(BaseView):
+    def __init__(
+        self,
+        title,
+        box_const=box.HORIZONTALS,
+        show_header=True,
+        show_lines=True,
+    ):
+        super().__init__(title, box_const, show_header, show_lines)
+
         self._columns = {
-            "title": title,
-            "box": box_const,
-            "show_header": show_header,
-            "show_lines": show_lines,
+            "#",
+            "Literal",
+            "Frequency",
         }
 
-        self._table = Table(**self._columns)
-        self._table.add_column("#")
-        self._table.add_column("Literal")
-        self._table.add_column("Frequency")
+        self._table = Table(**self._options)
+
+        for column in self._columns:
+            self._table.add_column(column)
 
     def add_kanji(self, row_id, kanji: Kanji):
         self._table.add_row(
@@ -111,3 +188,7 @@ class FrequentKanji:
     @property
     def table(self):
         return self._table
+
+    @property
+    def columns(self):
+        return self._columns
