@@ -19,7 +19,7 @@ def read_all_kanji(
     literal: list[str] | None = None,
     reading: list[str] | None = None,
     meaning: list[str] | None = None,
-    limit: int = 10,
+    limit: int = None,
 ):
     query = db.query(Kanji)
     if reading is not None:
