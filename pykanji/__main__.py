@@ -1,10 +1,10 @@
 import click
 from rich.console import Console
 
-from initdb import create_tables, store_kanji
 from pykanji import crud
 from pykanji.database import SessionLocal
-from views import FrequentKanji, KanjiLookUp, MeaningLookUp, OnyomiLookUp
+from pykanji.initdb import create_tables, store_kanji
+from pykanji.views import FrequentKanji, KanjiLookUp, MeaningLookUp, OnyomiLookUp
 
 console = Console()
 
@@ -94,10 +94,14 @@ def onyomi(onyomi, db=get_db()):
         console.print(view.table)
 
 
-if __name__ == "__main__":
+def main():
     cli.add_command(initdb)
     cli.add_command(kanji)
     cli.add_command(meaning)
     cli.add_command(frequent)
     cli.add_command(onyomi)
     cli()
+
+
+if __name__ == "__main__":
+    main()
