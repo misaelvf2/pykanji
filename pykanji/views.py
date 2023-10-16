@@ -1,7 +1,7 @@
 from rich import box
 from rich.table import Table
 
-from models import Kanji
+from pykanji.models import Kanji
 
 
 class BaseView:

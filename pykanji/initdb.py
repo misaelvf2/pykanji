@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from sqlalchemy.exc import IntegrityError
 
-import models
-from database import SessionLocal, engine
-from KanjiDicReader import KanjiDicReader
+from pykanji import models
+from pykanji.database import SessionLocal, engine
+from pykanji.KanjiDicReader import KanjiDicReader
 
-KANJIDIC_PATH = "kanjidic2.xml"
+KANJIDIC_PATH = "../kanjidic2.xml"
 
 
 def create_tables():

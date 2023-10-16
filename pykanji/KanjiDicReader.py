@@ -1,4 +1,4 @@
-from models import Kanji, Meaning, Nanori, Reading
+from pykanji.models import Kanji, Meaning, Nanori, Reading
 
 
 class KanjiDicReader:
