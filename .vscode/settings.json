@@ -1,11 +1,10 @@
 {
-    "python.linting.banditEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": ["--max-line-length=120"],
-    "python.linting.enabled": true,
     "python.analysis.extraPaths": [
         "./pykanji"
     ],
     "sqlite.logLevel": "DEBUG",
-    "python.pythonPath": ".venv/bin/python3.10"
+    "python.pythonPath": ".venv/bin/python3.10",
+    "python.autoComplete.extraPaths": [
+
+    ]
 }
